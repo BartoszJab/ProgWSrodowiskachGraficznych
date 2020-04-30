@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>Disco kulki</title>
+    <link rel="stylesheet" href="../css/styles.css">
+  </head>
+  <body>
+    <header id="main-header">Animacja disco kulek</header>
+    <div class="graphics-content">
+
+      <article class="code">
+        <video autoplay loop muted>
+          <source src="../video/discokulki.mp4" type="video/mp4">
+        </video>
+        <pre>
+          <figure>
+            <img src="../images/timer.JPG" alt="Timer">
+            <figcaption>Timer ustawiony na interwał 10</figcaption>
+          </figure>
+        </pre>
+        <h1 style="font-size: 40px;">Klasa kulka</h1>
+        <pre>
+          class Kulka{
+            int promien;
+            // predkoscX okresla zwrot i szybkosc poruszania sie w osi X
+            float predkoscX;
+            // predkoscY okresla zwrot i szybkosc poruszania sie w osi Y
+            float predkoscY;
+            float[] polozenie;
+
+            Color[] kolory = { Color.Red, Color.Purple, Color.RoyalBlue, Color.RosyBrown};
+            Color kolorKulki;
+            Random rand = new Random();
+            public Kulka(float startX, float startY, int promien, float predkoscX, float predkoscY)
+            {
+                this.promien = promien;
+                this.predkoscX = predkoscX;
+                this.predkoscY = predkoscY;
+
+                // polozenie kulki przetrzymuje w tablicy dwu elementowej gdzie x = pierwszy element, y = drugi element
+                this.polozenie = new float[2];
+
+                // ustawienie pozycji startowej kulki na panelu
+                this.polozenie[0] = startX;
+                this.polozenie[1] = startY;
+
+            }
+            .
+            .
+
+        </pre>
+
+        <header id="code-header">Metoda rysująca kulkę na panelu</header>
+        <pre>
+          public void rysujKulke(PaintEventArgs e)
+          {
+              // przy polaczeniu timer'a oraz random powstaja swiecace kulki!
+              SolidBrush brush = new SolidBrush(kolory[rand.Next(kolory.Length)]);
+              float x = this.polozenie[0];
+              float y = this.polozenie[1];
+
+              // ustawianie promienia kulki
+              int szerokosc = this.promien;
+              int wysokosc = this.promien;
+
+              e.Graphics.FillEllipse(brush, x, y, szerokosc, wysokosc);
+          }
+        </pre>
+        <header id="code-header">Metoda poruszająca kulkę po panelu</header>
+        <pre>
+          public void poruszajKulke(Panel panel)
+          {
+              this.polozenie[0] += this.predkoscX;
+              this.polozenie[1] += this.predkoscY;
+
+              // jezeli kulka dojdzie do krawedzi osi X to zmieniam kierunek, w ktorym sie porusza
+              if(this.polozenie[0] + this.promien >= panel.Width || this.polozenie[0]  < 0)
+              {
+                  this.predkoscX *= -1;
+              }
+              // jezeli kulka dojdzie do krawedzi osi Y to zmieniam kierunek, w ktorym sie porusza
+              if (this.polozenie[1] + this.promien >= panel.Height || this.polozenie[1] < 0)
+              {
+                  this.predkoscY *= -1;
+              }
+
+          }
+        </pre>
+
+        <header id="code-header">Inicjalizacja kulek oraz wywoływanie metod rysujących i poruszających je</header>
+        <pre>
+          public partial class Form1 : Form
+          {
+            Kulka[] kulki = { new Kulka(50, 100, 50, 5, 1), new Kulka(10, 10, 50, 7, 12), new Kulka(60, 30, 30, 30, 4),
+              new Kulka(40, 20, 40, 7, 4), new Kulka(40, 20, 80, -10, 10), new Kulka(40, 20, 30, -10, -10) };
+
+            public Form1()
+            {
+                InitializeComponent();
+            }
+
+
+            private void timer1_Tick(object sender, EventArgs e)
+            {
+                for(int i = 0; i < kulki.Length; i++)
+                {
+                    kulki[i].poruszajKulke(panel1);
+                }
+                panel1.Refresh();
+            }
+
+            private void panel1_Paint(object sender, PaintEventArgs e)
+            {
+                for (int i = 0; i < kulki.Length; i++)
+                {
+                    kulki[i].rysujKulke(e);
+                }
+            }
+
+    }
+        </pre>
+      </article>
+    </div>
+
+    <footer>Bartosz Jabłoński</footer>
+  </body>
+</html>
