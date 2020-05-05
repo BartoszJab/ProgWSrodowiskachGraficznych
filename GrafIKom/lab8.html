@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>Lab 3</title>
+    <link rel="stylesheet" href="../css/styles.css">
+  </head>
+  <body>
+    <header id="main-header">Laplace i filtry statyczne</header>
+    <div class="graphics-content">
+
+      <article class="code">
+        <header id="code-header" style="font-size: 50px">Laplace</header>
+        <pre>
+          <b style="font-size: 30px">Wykorzystuję ponownie kod maski z <a href="lab7.html" style="color: #3e73da; text-decoration: underline">poprzednich laboratoriów</a></b>
+        </pre>
+        <figure>
+          <img src="../images/GrafIKom/Lab8/laplace.JPG">
+        </figure>
+
+        <header id="code-header" style="font-size: 50px">Filtry statyczne</header>
+
+        <pre>
+       private void button12_Click(object sender, EventArgs e)
+       {
+           dane.M1 = (int)numericUpDown3.Value;
+            dane.M2 = (int)numericUpDown4.Value;
+            dane.M3 = (int)numericUpDown5.Value;
+
+            dane.M4 = (int)numericUpDown6.Value;
+            dane.M5 = (int)numericUpDown7.Value;
+            dane.M6 = (int)numericUpDown8.Value;
+
+            dane.M7 = (int)numericUpDown9.Value;
+            dane.M8 = (int)numericUpDown10.Value;
+            dane.M9 = (int)numericUpDown11.Value;
+
+            Bitmap b1 = (Bitmap)pictureBox1.Image;
+            Bitmap b2 = (Bitmap)pictureBox2.Image;
+
+            Color k1, k2, k3, k4, k5, k6, k7, k8, k9;
+            int keepR, keepG, keepB;
+            Color[] colors = new Color[9];
+
+            for (int i = 1; i < width - 1; i++)
+            {
+                for (int j = 1; j < height - 1; j++)
+                {
+                    k1 = b1.GetPixel(i - 1, j - 1);
+                    k2 = b1.GetPixel(i, j - 1);
+                    k3 = b1.GetPixel(i + 1, j - 1);
+
+                    k4 = b1.GetPixel(i - 1, j);
+                    k5 = b1.GetPixel(i, j);
+                    k6 = b1.GetPixel(i + 1, j);
+
+                    k7 = b1.GetPixel(i - 1, j + 1);
+                    k8 = b1.GetPixel(i, j + 1);
+                    k9 = b1.GetPixel(i + 1, j + 1);
+
+                    colors[0] = k1; colors[1] = k2; colors[2] = k3; colors[3] = k4; colors[4] = k5; colors[5] = k6; colors[6] = k7; colors[7] = k8; colors[8] = k9;
+
+                    <b style="font-size: 20px">// Ustawiam na początkowe wartości w celu obliczeń minimalnej i maksymalnej wartości</b>
+                    keepR = colors[0].R; keepG = colors[0].G; keepB = colors[0].B;
+
+                    . // (miejsce na wykonywane operacje)
+                    .
+                    .
+                    .
+                    b2.SetPixel(i, j, Color.FromArgb(keepR, keepG, keepB));
+               }
+           }
+           pictureBox2.Refresh();
+        </pre>
+
+        <header id="code-header">Filtr maksymalny</header>
+        <pre>
+          // filtr maks
+                   for(int x = 1; x < colors.Length; x++)
+                   {
+                       if (colors[x].R > keepR) keepR = colors[x].R;
+                       if (colors[x].G > keepG) keepG = colors[x].G;
+                       if (colors[x].B > keepB) keepB = colors[x].B;
+                   }
+        </pre>
+        <figure>
+          <img src="../images/GrafIKom/Lab8/max.JPG">
+          <figcaption>Przed i po zastosowaniu filtra maksymalnego</figcaption>
+        </figure>
+
+        <header id="code-header">Filtr minimalny</header>
+        <pre>
+          // filtr min
+                    for (int y = 1; y < colors.Length; y++)
+                    {
+                        if (colors[y].R < keepR) keepR = colors[y].R;
+                        if (colors[y].G < keepG) keepG = colors[y].G;
+                        if (colors[y].B < keepB) keepB = colors[y].B;
+                    }
+        </pre>
+        <figure>
+          <img src="../images/GrafIKom/Lab8/min.JPG">
+          <figcaption>Przed i po zastosowaniu filtra minimalnego</figcaption>
+        </figure>
+
+        <header id="code-header">Filtr medianowy</header>
+        <pre>
+          // mediana
+                    List<int> redList = new List<int>();
+                    List<int> greenList = new List<int>();
+                    List<int> blueList = new List<int>();
+
+                    for (int z = 0; z < colors.Length; z++)
+                    {
+                        redList.Add(colors[z].R);
+                        greenList.Add(colors[z].G);
+                        blueList.Add(colors[z].B);
+                    }
+
+                    redList.Sort();
+                    greenList.Sort();
+                    blueList.Sort();
+
+                    keepR = redList[4];
+                    keepG = greenList[4];
+                    keepB = blueList[4];
+        </pre>
+        <figure>
+          <img src="../images/GrafIKom/Lab8/mediana.JPG">
+          <figcaption>Przed i po zastosowaniu filtra medianowego</figcaption>
+        </figure>
+      </article>
+    </div>
+
+    <footer>Bartosz Jabłoński</footer>
+  </body>
+</html>

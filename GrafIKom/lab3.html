@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>Lab 3</title>
+    <link rel="stylesheet" href="../css/styles.css">
+  </head>
+  <body>
+    <header id="main-header">Rozjaśnienie, przyciemnienie, negatyw</header>
+    <div class="graphics-content">
+
+      <article class="code">
+        <header id="code-header">Funkcja rozjaśniająca</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab3/rozjasnienie.JPG" alt="rozjasnienie">
+          <figcaption>Operacja rozjaśnienia</figcaption>
+        </figure>
+        <pre>
+          // rozjaśnienie
+          private void button7_Click(object sender, EventArgs e)
+          {
+              Bitmap b1 = (Bitmap)pictureBox1.Image;
+              Bitmap b2 = (Bitmap)pictureBox2.Image;
+              int _b = 127;
+              Color k;
+              int r, g, b;
+
+              // <b style="font-size: 20px">pętla po mapie bitowej</b>
+              for(int i = 0; i < width; i++)
+              {
+                  for(int j = 0; j < height; j++)
+                  {
+                      k = b1.GetPixel(i, j);
+
+                      // <b style="font-size: 20px">do wartości r, g, b dodaję stałą _b co skutkuje rozjaśnieniem obrazu</b>
+                      r = k.R + _b;
+                      g = k.G + _b;
+                      b = k.B + _b;
+
+                      // <b style="font-size: 20px">w przypadku wartości większej niż 255 ustawiam ją na równo 255</b>
+                      if (k.R + _b > 255)
+                      {
+                          r = 255;
+                      }
+                      if (k.G + _b > 255)
+                      {
+                          g = 255;
+                      }
+                      if (k.B + _b > 255)
+                      {
+                          b = 255;
+                      }
+
+                      <b style="font-size: 20px">ustawiam drugą mapę bitową z nowymi wartościami kolorów</b>
+                      b2.SetPixel(i, j, Color.FromArgb(r, g, b));
+
+                  }
+              }
+              pictureBox2.Refresh();
+          }
+        </pre>
+
+        <header id="code-header">Funkcja przyciemniająca</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab3/przyciemnienie.JPG" alt="przyciemnienie">
+          <figcaption>Operacja przyciemnienia</figcaption>
+        </figure>
+        <pre>
+          private void button8_Click(object sender, EventArgs e)
+            {
+            Bitmap b1 = (Bitmap)pictureBox1.Image;
+            Bitmap b2 = (Bitmap)pictureBox2.Image;
+            int _b = 127;
+            Color k;
+            int r, g, b;
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    k = b1.GetPixel(i, j);
+
+                    r = k.R - _b;
+                    g = k.G - _b;
+                    b = k.B - _b;
+                    if (k.R - _b < 0)
+                    {
+                        r = 0;
+                    }
+                    if (k.G - _b < 0)
+                    {
+                        g = 0;
+                    }
+                    if (k.B - _b < 0)
+                    {
+                        b = 0;
+                    }
+
+                    b2.SetPixel(i, j, Color.FromArgb(r, g, b));
+
+                }
+            }
+            pictureBox2.Refresh();
+        }
+      </pre>
+        <header id="code-header">Negatyw</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab3/negatyw.JPG" alt="negatyw">
+          <figcaption>Negatyw</figcaption>
+        </figure>
+
+        <pre>
+          private void button6_Click(object sender, EventArgs e)
+          {
+            Bitmap b1 = (Bitmap)pictureBox1.Image;
+            Bitmap b2 = (Bitmap)pictureBox2.Image;
+            Color k;
+            int r, g, b;
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    // <b style="font-size: 20px">od 255 odejmuję poszczególne wartości r, g, b</b>
+                    k = b1.GetPixel(i, j);
+                    r = 255-k.R;
+                    g = 255-k.G;
+                    b = 255-k.B;
+
+                    k = Color.FromArgb(r, g, b);
+                    b2.SetPixel(i, j, k);
+                }
+            }
+            pictureBox2.Refresh();
+        }
+      </pre>
+
+      </article>
+    </div>
+
+    <footer>Bartosz Jabłoński</footer>
+  </body>
+</html>

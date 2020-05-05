@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>Lab4</title>
+    <link rel="stylesheet" href="../css/styles.css">
+  </head>
+  <body>
+    <header id="main-header">Algorytmy mieszania obrazów</header>
+    <div class="graphics-content">
+      <article class="code">
+        <figure>
+          <img src="../images/GrafIKom/Lab4/obrazy_wejsciowe.JPG" alt="obrazy wejsciowe">
+          <figcaption>Obrazy wejściowe, na których wykonywane są algorytmy mieszania</figcaption>
+        </figure>
+        <header id="code-header">Metoda wykonująca dany algorytm po naciśnięciu przycisku</header>
+        <pre>
+          private void button13_Click(object sender, EventArgs e)
+        {
+            Bitmap b1 = (Bitmap)pictureBox1.Image;
+            Bitmap b2 = (Bitmap)pictureBox2.Image;
+            Color k, k1, k2;
+            int r, g, b;
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    k1 = b1.GetPixel(i, j);
+                    k2 = b2.GetPixel(i, j);
+
+                    . // (miejsce na algorytm)
+                    .
+                    .
+                    .
+                }
+              pictureBox2.Refresh();
+            }
+        </pre>
+
+        <header id="code-header">Suma</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/suma.JPG" alt="suma">
+          <figcaption>Obraz wynikowy sumy</figcaption>
+        </figure>
+        <pre>
+                  if (k1.R + k2.R > 255) r = 255;
+                  else r = k1.R + k2.R;
+
+                  if (k1.G + k2.G > 255) g = 255;
+                  else g = k1.G + k2.G;
+
+                  if (k1.B + k2.B > 255) b = 255;
+                  else b = k1.B + k2.B;
+
+                  b2.SetPixel(i, j, Color.FromArgb(r, g, b));
+        </pre>
+
+        <header id="code-header">Odejmowanie</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/odejmowanie.JPG" alt="odejmowanie">
+          <figcaption>Obraz wynikowy odejmowania</figcaption>
+        </figure>
+        <pre>
+                    r = k1.R + k2.R - 255;
+                    g = k1.G + k2.G - 255;
+                    b = k1.B + k2.B - 255;
+
+                    if (r < 0) r = 0;
+                    if (g < 0) g = 0;
+                    if (b < 0) b = 0;
+
+                    b2.SetPixel(i, j, Color.FromArgb(r, g, b));
+        </pre>
+
+        <header id="code-header">Różnica</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/roznica.JPG" alt="roznica">
+          <figcaption>Obraz wynikowy różnicy</figcaption>
+        </figure>
+        <pre>
+                      r = Math.Abs(k1.R - k2.R);
+                      g = Math.Abs(k1.G - k2.G);
+                      b = Math.Abs(k1.B - k2.B);
+        </pre>
+
+        <header id="code-header">Mnożenie</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/mnozenie.JPG" alt="mnozenie">
+          <figcaption>Obraz wynikowy mnożenia</figcaption>
+        </figure>
+        <pre>
+                      r = (k1.R * k2.R)/255;
+                      g = (k1.G * k2.G)/255;
+                      b = (k1.B * k2.B)/255;
+
+                      if (r > 255) r = 255;
+                      if (g > 255) g = 255;
+                      if (b > 255) b = 255;
+        </pre>
+
+        <header id="code-header">Mnożenie odwrotności</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/mnozenie_odwrotnosci.JPG" alt="mnozenie odwrotne">
+          <figcaption>Obraz wynikowy mnożenia odwrotności</figcaption>
+        </figure>
+        <pre>
+                        r = 255 - (((255 - k1.R) * (255 - k2.R)) / 255);
+                        if (r > 255) r = 255;
+                        if (r < 0) r = 0;
+
+                        g = 255 - (((255 - k1.G) * (255 - k2.G)) / 255);
+                        if (g > 255) g = 255;
+                        if (g < 0) g = 0;
+
+                        b = 255 - (((255 - k1.B) * (255 - k2.B)) / 255);
+                        if (b > 255) b = 255;
+                        if (b < 0) b = 0;
+        </pre>
+
+        <header id="code-header">Negacja</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/negacja.JPG" alt="negacja">
+          <figcaption>Obraz wynikowy negacji</figcaption>
+        </figure>
+        <pre>
+                        r = 255 - Math.Abs(255 - k1.R - k2.R);
+                        g = 255 - Math.Abs(255 - k1.G - k2.G);
+                        b = 255 - Math.Abs(255 - k1.B - k2.B);
+        </pre>
+
+        <header id="code-header">Ciemniejsze</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/ciemniejsze.JPG" alt="ciemniejsze">
+          <figcaption>Obraz wynikowy "ciemniejsze"</figcaption>
+        </figure>
+        <pre>
+                        if (k1.R < k2.R)
+                        {
+                            r = k1.R;
+                        }
+                        else r = k2.R;
+
+                        if (k1.G < k2.G)
+                        {
+                            g = k1.G;
+                        }
+                        else g = k2.G;
+
+                        if (k1.B < k2.B)
+                        {
+                            b = k1.B;
+                        }
+                        else b = k2.B;
+        </pre>
+
+        <header id="code-header">Jaśniejsze</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/jasniejsze.JPG" alt="jasniejsze">
+          <figcaption>Obraz wynikowy "jaśniejsze"</figcaption>
+        </figure>
+        <pre>
+                        if (k1.R > k2.R)
+                        {
+                            r = k1.R;
+                        }
+                        else r = k2.R;
+
+                        if (k1.G > k2.G)
+                        {
+                            g = k1.G;
+                        }
+                        else g = k2.G;
+
+                        if (k1.B > k2.B)
+                        {
+                            b = k1.B;
+                        }
+                        else b = k2.B;
+        </pre>
+
+        <header id="code-header">Wyłączenie</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/wylaczenie.JPG" alt="wylaczenie">
+          <figcaption>Obraz wynikowy "wyłączenie"</figcaption>
+        </figure>
+        <pre>
+                        r = k1.R + k2.R - 2 * ((k1.R * k2.R) / 255);
+                        g = k1.G + k2.G - 2 * ((k1.G * k2.G) / 255);
+                        b = k1.B + k2.B - 2 * ((k1.B * k2.B) / 255);
+        </pre>
+
+        <header id="code-header">Nakładka</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/nakladka.JPG" alt="nakladka">
+          <figcaption>Obraz wynikowy "nakładka"</figcaption>
+        </figure>
+        <pre>
+                        if(k1.R < (255 / 2))
+                        {
+                          r = 2 * ((k1.R * k2.R) / 255);
+                        } else r = 255 - 2 * (((255 - k1.R) * (255-k2.R))/255);
+
+                        if (k1.G < (255 / 2))
+                        {
+                            g = 2 * ((k1.G * k2.G) / 255);
+                        }
+                        else g = 255 - 2 * (((255 - k1.G) * (255 - k2.G)) / 255);
+
+                        if (k1.B < (255 / 2))
+                        {
+                            b = 2 * ((k1.B * k2.B) / 255);
+                        }
+                        else b = 255 - 2 * (((255 - k1.B) * (255 - k2.B)) / 255);
+        </pre>
+
+        <header id="code-header">Ostre światło</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/ostre_swiatlo.JPG" alt="ostre swiatlo">
+          <figcaption>Obraz wynikowy "ostre światło"</figcaption>
+        </figure>
+        <pre>
+                        if (k2.R < 0) r = (2 * k1.R * k2.R) / 255;
+                        else r = 255 - (2 * (255 - k1.R) * (255 - k2.R)) / 255;
+                        if (r < 0) r *= -1;
+
+                        if (k2.G < 0) g = (2 * k1.G * k2.G) / 255;
+                        else g = 255 - (2 * (255 - k1.G) * (255 - k2.G)) / 255;
+                        if (g < 0) g *= -1;
+
+                        if (k2.B < 0) b = (2 * k1.B * k2.B) / 255;
+                        else b = 255 - (2 * (255 - k1.B) * (255 - k2.B)) / 255;
+                        if (b < 0) b *= -1;
+        </pre>
+
+        <header id="code-header">Wypalenie</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/wypalenie.JPG" alt="wypalenie">
+          <figcaption>Obraz wynikowy "wypalenie"</figcaption>
+        </figure>
+        <pre>
+                        if (255 - k2.R != 0)
+                        {
+                            r = k1.R / (255 - k2.R);
+                        }
+                        else r = k1.R / 10;
+
+                        if (255 - k2.G != 0)
+                        {
+                            g = k1.G / (255 - k2.G);
+                        }
+                        else g = k1.G / 10;
+
+                        if (255 - k2.B != 0)
+                        {
+                            b = k1.B / (255 - k2.B);
+                        }
+                        else b = k1.B / 10;
+        </pre>
+
+        <header id="code-header">Reflect mode</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab4/reflect.JPG" alt="reflect">
+          <figcaption>Obraz wynikowy "reflect mode"</figcaption>
+        </figure>
+        <pre>
+                        if (255 - k2.R == 0) r = 0;
+                        else r = (k1.R * k1.R) / (255 - k2.R);
+
+                        if (r > 255) r = 255;
+                        if (255 - k2.G == 0) g = 0;
+                        else g = (k1.G * k1.G) / (255 - k2.G);
+                        if (g > 255) g = 255;
+                        if (255 - k2.G == 0) b = 0;
+                        else b = (k1.B * k1.B) / (255 - k2.B);
+                        if (b > 255) b = 255;
+        </pre>
+      </article>
+    </div>
+
+    <footer>Bartosz Jabłoński</footer>
+  </body>
+</html>

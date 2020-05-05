@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>Lab 6</title>
+    <link rel="stylesheet" href="../css/styles.css">
+  </head>
+  <body>
+    <header id="main-header">Histogram, wyrównanie i skalowanie</header>
+    <div class="graphics-content">
+
+      <article class="code">
+        <header id="code-header">Histogram dla danego obrazka</header>
+        <figure>
+          <img src="../images/GrafIKom/Lab6/histogram_obrazek.JPG">
+        </figure>
+        <pre>
+          private int[] red = null;
+          private int[] green = null;
+          private int[] blue = null;
+
+          <b style="font-size: 20px">// histogram</b>
+          private void button18_Click(object sender, EventArgs e)
+          {
+              chart1.Visible = true;
+              Bitmap b1 = (Bitmap)pictureBox1.Image;
+              red = new int[256];
+              green = new int[256];
+              blue = new int[256];
+              Color k;
+              for(int i = 0; i < width; i++)
+              {
+                  for(int j = 0; j < height; j++)
+                  {
+                      k = b1.GetPixel(i, j);
+                      red[k.R]++;
+                      green[k.G]++;
+                      blue[k.B]++;
+                  }
+              }
+
+
+              chart1.Series["red"].Points.Clear();
+              chart1.Series["green"].Points.Clear();
+              chart1.Series["blue"].Points.Clear();
+              for(int i = 0; i < 256; i++)
+              {
+                  chart1.Series["red"].Points.AddXY(i, red[i]);
+                  chart1.Series["green"].Points.AddXY(i, green[i]);
+                  chart1.Series["blue"].Points.AddXY(i, blue[i]);
+              }
+              chart1.Invalidate();
+          }
+
+            <b style="font-size: 20px">// LUT dla wyrownania</b>
+            private int[] calculateLUT(int[] values, int size)
+            {
+                double minValue = 0;
+                for (int i = 0; i < 256; i++)
+                {
+                    if (values[i] != 0)
+                    {
+                        minValue = values[i];
+                        break;
+                    }
+                }
+
+                int[] result = new int[256];
+                double sum = 0;
+                for (int i = 0; i < 256; i++)
+                {
+                    sum += values[i];
+                    result[i] = (int)(((sum - minValue) / (size - minValue)) * 255.0);
+                }
+
+                return result;
+              }
+
+            <b style="font-size: 20px">// wyrownywanie</b>
+          private void button19_Click(object sender, EventArgs e)
+          {
+              Bitmap b1 = (Bitmap)pictureBox1.Image;
+              Bitmap b2 = (Bitmap)pictureBox2.Image;
+              Color k, k2;
+
+              int[] LUTred = calculateLUT(red, width * height);
+              int[] LUTgreen = calculateLUT(green, width * height);
+              int[] LUTblue = calculateLUT(blue, width * height);
+
+              red = new int[256];
+              green = new int[256];
+              blue = new int[256];
+
+              for(int i = 0; i < width; i++)
+              {
+                  for(int j = 0; j < height; j++)
+                  {
+                      k = b1.GetPixel(i, j);
+                      k2 = Color.FromArgb(LUTred[k.R], LUTgreen[k.G], LUTblue[k.B]);
+                      b2.SetPixel(i, j, k2);
+
+                      red[k2.R]++;
+                      green[k2.G]++;
+                      blue[k2.B]++;
+                  }
+              }
+              pictureBox2.Refresh();
+
+              chart1.Series["red"].Points.Clear();
+              chart1.Series["green"].Points.Clear();
+              chart1.Series["blue"].Points.Clear();
+              for (int i = 0; i < 256; i++)
+              {
+                  chart1.Series["red"].Points.AddXY(i, red[i]);
+                  chart1.Series["green"].Points.AddXY(i, green[i]);
+                  chart1.Series["blue"].Points.AddXY(i, blue[i]);
+              }
+              chart1.Invalidate();
+          }
+
+          </pre>
+
+          <header id="code-header">Po wyrównaniu</header>
+          <figure>
+            <img src="../images/GrafIKom/Lab6/wyrownanie_obrazek.JPG">
+          </figure>
+
+          <pre>
+            <b style="font-size: 20px">// LUT dla skalowania</b>
+        private int[] calculateLUT2(int[] values)
+        {
+            int minValue = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                if (values[i] != 0)
+                {
+                    minValue = i;
+                    break;
+                }
+            }
+
+            int maxValue = 255;
+            for (int i = 255; i >= 0; i--)
+            {
+                if (values[i] != 0)
+                {
+                    maxValue = i;
+                    break;
+                }
+            }
+
+            int[] result = new int[256];
+            double a = 255.0 / (maxValue - minValue);
+            for (int i = 0; i < 256; i++)
+            {
+                result[i] = (int)(a * (i - minValue));
+            }
+
+            return result;
+        }
+        <b style="font-size: 20px">// skalowanie</b>
+        private void button20_Click(object sender, EventArgs e)
+        {
+            Bitmap b1 = (Bitmap)pictureBox1.Image;
+            Bitmap b2 = (Bitmap)pictureBox2.Image;
+            Color k, k2;
+
+            int[] LUTred = calculateLUT2(red);
+            int[] LUTgreen = calculateLUT2(green);
+            int[] LUTblue = calculateLUT2(blue);
+
+            red = new int[256];
+            green = new int[256];
+            blue = new int[256];
+
+            for(int i = 0; i < width; i++)
+            {
+                for(int j = 0; j < height; j++)
+                {
+                    k = b1.GetPixel(i, j);
+                    k2 = Color.FromArgb(LUTred[k.R], LUTgreen[k.G], LUTblue[k.B]);
+
+                    b2.SetPixel(i, j, k2);
+                    red[k2.R]++;
+                    green[k2.G]++;
+                    blue[k2.B]++;
+                }
+            }
+            pictureBox2.Refresh();
+
+            chart1.Series["red"].Points.Clear();
+            chart1.Series["green"].Points.Clear();
+            chart1.Series["blue"].Points.Clear();
+            for (int i = 0; i < 256; i++)
+            {
+                chart1.Series["red"].Points.AddXY(i, red[i]);
+                chart1.Series["green"].Points.AddXY(i, green[i]);
+                chart1.Series["blue"].Points.AddXY(i, blue[i]);
+            }
+            chart1.Invalidate();
+        }
+          </pre>
+
+          <header id="code-header">Po skalowaniu</header>
+          <figure>
+            <img src="../images/GrafIKom/Lab6/histogram_obrazek.JPG">
+          </figure>
+
+
+
+
+      </article>
+    </div>
+
+    <footer>Bartosz Jabłoński</footer>
+  </body>
+</html>
