@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>Lab 9</title>
+    <link rel="stylesheet" href="../css/styles.css">
+  </head>
+  <body>
+    <header id="main-header">Gra w kulke </header>
+    <div class="graphics-content">
+      <article class="code">
+
+        Link do projektu<a href="https://drive.google.com/open?id=1DonF5PSMdpNKQb4e0mbMtCGSE7VnVZWh">https://drive.google.com/open?id=1DonF5PSMdpNKQb4e0mbMtCGSE7VnVZWh</a>
+        <video autoplay loop muted>
+          <source src="../video/roll a ball.mp4" type="video/mp4">
+        </video>
+        <header id="code-header">PlayerMovement.cs</header>
+        <pre>
+          public class PlayerMovement : MonoBehaviour
+    {
+        public float speed;
+        public Text countText;
+        public Text winText;
+
+        private Rigidbody rb;
+        private int count;
+
+        void Start()
+        {
+            rb = GetComponent<Rigidbody>();
+            count = 0;
+            SetCountText();
+            winText.text = "";
+        }
+
+        void FixedUpdate()
+        {
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            float moveVertical = Input.GetAxis("Vertical");
+
+            Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+
+            rb.AddForce(movement * speed);
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Pickable"))
+            {
+                other.gameObject.SetActive(false);
+                count++;
+                speed += 1;
+                SetCountText();
+            }
+        }
+
+        void SetCountText()
+        {
+            countText.text = "Count " + count.ToString();
+            if(count >= 12)
+            {
+                winText.text = "You've won!";
+            }
+        }
+    }
+        </pre>
+        <header id="code-header">CameraController.cs</header>
+        <pre>
+          public class CameraController : MonoBehaviour
+        {
+              public GameObject player;
+              private Vector3 offset;
+
+              void Start()
+              {
+                  offset = transform.position - player.transform.position;
+              }
+              void LateUpdate()
+              {
+                  transform.position = player.transform.position + offset;
+              }
+        }
+        </pre>
+        <header id="code-header">Rotator.cs</header>
+        <pre>
+          public class Rotator : MonoBehaviour
+          {
+              void Update()
+              {
+                  transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);
+              }
+          }
+        </pre>
+      </article>
+    </div>
+
+    <footer>Bartosz Jabłoński</footer>
+  </body>
+</html>
