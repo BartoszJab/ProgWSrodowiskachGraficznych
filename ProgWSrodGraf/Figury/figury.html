@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>Figura</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+  </head>
+  <body>
+    <header id="main-header">Dziedziczenie i naprawienie migotania</header>
+    <div class="graphics-content">
+      <article class="code">
+        <video autoplay loop muted>
+          <source src="../../video/figury.mp4" type="video/mp4">
+        </video>
+        <header id="code-header">Klasa abstrakcyjna Figura</header>
+        <pre>
+          abstract class Figura
+    {
+        <b style="font-size: 20px">// obliczam ilosc odbic figur oraz ilosc instancji klasy</b>
+        public static int iloscOdbic = 0, iloscFigur;
+
+        protected float polozenieX, polozenieY;
+        protected int promien, predkoscX, predkoscY;
+        protected SolidBrush b;
+
+        public Figura(float startX, float startY, int promien, int predkoscX, int predkoscY, Color color)
+        {
+            this.promien = promien;
+            this.predkoscX = predkoscX;
+            this.predkoscY = predkoscY;
+
+            polozenieX = startX;
+            polozenieY = startY;
+
+            b = new SolidBrush(color);
+            <b style="font-size: 20px">// przy utworzeniu nowego obiektu klasy inkrementuje wartosc o 1</b>
+            iloscFigur++;
+        }
+        abstract public void rysuj(Graphics g);
+
+        public void porusz(int szerokosc, int wysokosc)
+        {
+            polozenieX += predkoscX;
+            polozenieY += predkoscY;
+
+            <b style="font-size: 20px">// sprawdzam czy element styka sie ze sciana, jesli tak to zmieniam jego kierunek i zwiekszam ilosc odbic o 1</b>
+            if (polozenieX + promien >= szerokosc || polozenieX < 0)
+            {
+                iloscOdbic++;
+                predkoscX *= -1;
+            }
+
+            if (polozenieY + promien >= wysokosc || polozenieY < 0)
+            {
+                iloscOdbic++;
+                predkoscY *= -1;
+            }
+        }
+
+    }
+        </pre>
+        <header id="code-header">Klasa Kulka</header>
+        <pre>
+          class Kulka : Figura
+    {
+        public Kulka(float startX, float startY, int promien, int predkoscX, int predkoscY, Color color)
+            : base(startX, startY, promien, predkoscX, predkoscY, color)
+        {
+        }
+        override
+        <b style="font-size: 20px">// metoda rysujaca kulke na panelu</b>
+        public void rysuj(Graphics g)
+        {
+            g.FillEllipse(b, polozenieX, polozenieY, promien, promien);
+        }
+    }
+        </pre>
+        <header id="code-header">Klasa Kwadrat</header>
+        <pre>
+          class Kwadrat : Figura
+    {
+        public Kwadrat(float startX, float startY, int promien, int predkoscX, int predkoscY, Color color)
+            : base(startX, startY, promien, predkoscX, predkoscY, color)
+        {
+        }
+        override
+
+        public void rysuj(Graphics g)
+        {
+            g.FillRectangle(b, polozenieX, polozenieY, promien, promien);
+        }
+    }
+        </pre>
+
+        <header id="code-header" style="font-size: 40px">Form1</header>
+        <pre>
+          <b style="font-size: 25px">Inicjalizuję listę figur po czym dodaję dwa początkowe elementy typu kulka i kwadrat</b>
+
+          private List<Figura> figury = new List<Figura>();
+
+            public Form1()
+            {
+                figury.Add(new Kulka(10, 10, 30, 5, 7, Color.Red));
+                figury.Add(new Kwadrat(100, 10, 50, 8, 5, Color.BlanchedAlmond));
+
+                InitializeComponent();
+            }
+        </pre>
+
+
+        <pre>
+          private void timer1_Tick(object sender, EventArgs e)
+        {
+          <b style="font-size: 20px">// w labelach ustawiam informacje o ilosci figur na planszy oraz ilosci odbic obiektow klasy figura</b>
+            label2.Text = "Ilosc figur: " + Figura.iloscFigur;
+            label1.Text = "Ilosc odbic figur: " + Figura.iloscOdbic;
+
+            czyZaznaczony();
+
+            foreach (Figura f in figury)
+            {
+                f.porusz(mojPanel1.Width, mojPanel1.Height);
+            }
+            mojPanel1.Refresh();
+        }
+
+        <b style="font-size: 20px">// funkcja sprawdzajaca czy dany chceckbox jest zaznaczony, jesli tak to drugi jest wylaczony</b>
+        private void czyZaznaczony()
+        {
+            if (checkBox1.Checked)
+            {
+                checkBox2.Enabled = false;
+            }
+            else
+            {
+                checkBox2.Enabled = true;
+            }
+
+            if (checkBox2.Checked)
+            {
+                checkBox1.Enabled = false;
+            }
+            else
+            {
+                checkBox1.Enabled = true;
+            }
+        }
+        </pre>
+
+        <pre>
+          private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            foreach (Figura f in figury)
+            {
+                f.rysuj(g);
+            }
+        }
+        <b style="font-size: 20px">// funkcje odpowiadajace za zachowanie timer'a</b>
+        private void startBtn_Click(object sender, EventArgs e)
+        {
+            timer1.Start();
+        }
+
+        private void stopBtn_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+        }
+
+        private void koniecBtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        </pre>
+
+        <pre>
+        <b style="font-size: 20px">// tworze nowa figure po nacisnieciu dowolnego przycisku myszy w miejscu w ktorym klikam</b>
+        private void mojPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            <b style="font-size: 20px">// wartosc z numeric up down konwertuje do inta</b>
+            int promien = Convert.ToInt32(numericUpDown1.Value);
+
+            int predkoscX = Convert.ToInt32(numericUpDown2.Value);
+            int predkoscY = Convert.ToInt32(numericUpDown3.Value);
+
+            <b style="font-size: 20px">// zaznaczona figure dodaje do listy</b>
+            if (checkBox1.Checked)
+            {
+                figury.Add(new Kulka(e.X, e.Y, promien, predkoscX, predkoscY, textBox1.BackColor));
+            }
+            else
+            {
+                figury.Add(new Kwadrat(e.X, e.Y, promien, predkoscX, predkoscY, textBox1.BackColor));
+            }
+
+
+        }
+        <b style="font-size: 20px">// przycisk do wyboru koloru (uzylem elementu color dialog z toolboxa)</b>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            colorDialog1.ShowDialog();
+            textBox1.BackColor = colorDialog1.Color;
+        }
+        <b style="font-size: 20px">// funkcja pozwalajaca na zmiane interwalu timer'a przy uzyciu track bar'u (nieidealnie odwzorowuje slow motion)</b>
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            label7.Text = "Interwal: " + trackBar1.Value;
+            timer1.Interval = trackBar1.Value;
+        }
+        </pre>
+
+        <header id="code-header" style="font-size: 40px">Na koniec MojPanel dziedziczący po Panelu</header>
+        <pre>
+          public class MojPanel : Panel
+          {
+              public MojPanel()
+              {
+                  DoubleBuffered = true;
+              }
+          }
+
+          <figure>
+            <img src="../../images/PwSG/MojPanel.JPG" alt="MojPanel jpg">
+          </figure>
+        </pre>
+      </article>
+    </div>
+
+    <footer>Bartosz Jabłoński</footer>
+  </body>
+</html>
