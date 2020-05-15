@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>3D</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+  </head>
+  <body>
+    <header id="main-header">3D</header>
+    <div class="graphics-content">
+      <article class="code">
+        <video autoplay loop muted>
+          <source src="../../video/3d.mp4" type="video/mp4">
+        </video>
+        <ul>
+          <li><a href="kod.txt">Cały kod Form1.cs</a></li>
+        </ul>
+        <pre>
+          private double r = 10, fi = 45, teta = 60; //pozycja obserwatora we współrzędnych sferycznych
+
+          public Form1()
+          {
+            InitializeComponent();
+            listBox1.SelectedItem = "Ostroslup";
+          }
+        </pre>
+        <header id="code-header">Metoda tworząca ostrosłup czworokątny</header>
+        <pre>
+          private void Ostroslup(Graphics g, T3d projektor)
+          {
+            Punkt[] p = { new Punkt(0, 0, 1),           //ostrosłup
+                          new Punkt(1, 0, 0),
+                          new Punkt(0, 1, 0),
+                          new Punkt(-1, 0, 0),
+                          new Punkt(0, -1, 0) };
+            Point[] ep = new Point[p.Length];
+
+            for (int i = 0; i < p.Length; i++)          //konwersja punktów 3d na ekran
+                projektor.punkt_3d(out ep[i], p[i]);
+
+            g.DrawLine(Pens.Yellow, ep[1], ep[2]);    //podstawa ostrosłupa
+            g.DrawLine(Pens.Yellow, ep[2], ep[3]);
+            g.DrawLine(Pens.Yellow, ep[3], ep[4]);
+            g.DrawLine(Pens.Yellow, ep[4], ep[1]);
+
+            g.DrawLine(Pens.Yellow, ep[1], ep[0]);    //boki.
+            g.DrawLine(Pens.Yellow, ep[2], ep[0]);
+            g.DrawLine(Pens.Yellow, ep[3], ep[0]);
+            g.DrawLine(Pens.Yellow, ep[4], ep[0]);
+          }
+        </pre>
+
+        <header id="code-header">Metoda tworząca sześcian</header>
+        <pre>
+          private void Szescian(Graphics g, T3d projektor)
+          {
+            Punkt[] p = { new Punkt(1, 0, 0),
+                          new Punkt(0, 1, 0),
+                          new Punkt(-1, 0, 0),
+                          new Punkt(0, -1, 0),
+
+                          new Punkt(1, 0, 1),
+                          new Punkt(0, 1, 1),
+                          new Punkt(-1, 0, 1),
+                          new Punkt(0, -1, 1)
+          };
+            Point[] ep = new Point[p.Length];
+
+            for (int i = 0; i < p.Length; i++)
+                projektor.punkt_3d(out ep[i], p[i]);
+
+            g.DrawLine(Pens.Yellow, ep[0], ep[1]);    //podstawa dolna szescianu
+            g.DrawLine(Pens.Yellow, ep[1], ep[2]);
+            g.DrawLine(Pens.Yellow, ep[2], ep[3]);
+            g.DrawLine(Pens.Yellow, ep[3], ep[0]);
+
+            g.DrawLine(Pens.Yellow, ep[4], ep[5]);    //podstawa gorna szescianu
+            g.DrawLine(Pens.Yellow, ep[5], ep[6]);
+            g.DrawLine(Pens.Yellow, ep[6], ep[7]);
+            g.DrawLine(Pens.Yellow, ep[7], ep[4]);
+
+            g.DrawLine(Pens.Yellow, ep[0], ep[4]);    // wysokoci szescianu
+            g.DrawLine(Pens.Yellow, ep[1], ep[5]);
+            g.DrawLine(Pens.Yellow, ep[2], ep[6]);
+            g.DrawLine(Pens.Yellow, ep[3], ep[7]);
+        }
+        </pre>
+
+        <header id="code-header">Metoda tworząca graniastosłup trójkątny</header>
+        <pre>
+          private void graniastoslupTrojkatny(Graphics g, T3d projektor)
+          {
+            Punkt[] p = { new Punkt(1, 0, 0),
+                          new Punkt(0, 1, 0),
+                          new Punkt(0, 0, 0),
+
+                          new Punkt(1, 0, 1),
+                          new Punkt(0, 1, 1),
+                          new Punkt(0, 0, 1)
+            };
+            Point[] ep = new Point[p.Length];
+
+            for (int i = 0; i < p.Length; i++)
+                projektor.punkt_3d(out ep[i], p[i]);
+
+            g.DrawLine(Pens.Yellow, ep[0], ep[1]);   // podstawa dolna graniastostlupa trojkatnego
+            g.DrawLine(Pens.Yellow, ep[1], ep[2]);
+            g.DrawLine(Pens.Yellow, ep[2], ep[0]);
+
+            g.DrawLine(Pens.Yellow, ep[3], ep[4]); // podstawa gorna graniastoslupa trojkatnego
+            g.DrawLine(Pens.Yellow, ep[4], ep[5]);
+            g.DrawLine(Pens.Yellow, ep[5], ep[3]);
+
+            g.DrawLine(Pens.Yellow, ep[0], ep[3]); // wysokosci graniastoslupa trojkatnego
+            g.DrawLine(Pens.Yellow, ep[1], ep[4]);
+            g.DrawLine(Pens.Yellow, ep[2], ep[5]);
+          }
+        </pre>
+
+        <header id="code-header">Wybór figury z list boxa</header>
+        <pre>
+          private void mojPanel1_Paint(object sender, PaintEventArgs e)
+          {
+            Punkt obserwator = Punkt.RFiTetaToXYZ(r, fi, teta);    //konwersja sferycznych do kartezjanskich
+            T3d projektor = new T3d(obserwator, mojPanel1.ClientRectangle);
+            Graphics g = e.Graphics;
+            switch (listBox1.SelectedItem.ToString())
+            {
+                case "Ostroslup":
+                    Ostroslup(g, projektor);
+                    break;
+                case "Szescian":
+                    Szescian(g, projektor);
+                    break;
+                case "Graniastoslup trojkatny":
+                    graniastoslupTrojkatny(g, projektor);
+                    break;
+            }
+          }
+        </pre>
+
+        <header id="code-header">Trackbary odpowiedzialne za zmianę wartości teta oraz przybliżenie/oddalenie widoku</header>
+        <pre>
+          // teta
+          private void trackBar1_Scroll(object sender, EventArgs e)
+           {
+               teta = trackBar1.Value;
+               mojPanel1.Invalidate();
+           }
+          // przyblizenie/oddalenie
+           private void trackBar2_Scroll(object sender, EventArgs e)
+           {
+               r = trackBar2.Value;
+               mojPanel1.Invalidate();
+           }
+        </pre>
+
+        <header id="code-header">Timer i autoobracanie</header>
+        <pre>
+          private void autoObracanie()
+         {
+           if (checkBox1.Checked)
+           {
+               fi += (double)numericUpDown1.Value;
+               if (fi >= 360)
+                   fi -= 360;
+           }
+         }
+
+       private void timer1_Tick(object sender, EventArgs e)
+         {
+           autoObracanie();
+           mojPanel1.Invalidate();
+         }
+        </pre>
+      </article>
+    </div>
+
+    <footer>Bartosz Jabłoński</footer>
+  </body>
+</html>
